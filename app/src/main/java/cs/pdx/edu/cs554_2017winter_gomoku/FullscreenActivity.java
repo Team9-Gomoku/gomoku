@@ -1,4 +1,4 @@
-package fzhang.cs.pdx.edu.cs554_2017winter_gomoku;
+package cs.pdx.edu.cs554_2017winter_gomoku;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;

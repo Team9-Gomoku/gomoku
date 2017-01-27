@@ -1,4 +1,4 @@
-package fzhang.cs.pdx.edu.cs554_2017winter_gomoku;
+package cs.pdx.edu.cs554_2017winter_gomoku;
 
 import org.junit.Test;
 
