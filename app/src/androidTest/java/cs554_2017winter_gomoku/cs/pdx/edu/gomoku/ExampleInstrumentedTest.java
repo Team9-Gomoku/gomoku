@@ -1,4 +1,4 @@
-package cs.pdx.edu.cs554_2017winter_gomoku;
+package cs554_2017winter_gomoku.cs.pdx.edu.gomoku;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("cs.pdx.edu.cs554_2017winter_gomoku", appContext.getPackageName());
+        assertEquals("cs554_2017winter_gomoku.cs.pdx.edu.gomoku", appContext.getPackageName());
     }
 }
