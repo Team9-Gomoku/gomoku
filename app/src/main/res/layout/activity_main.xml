@@ -12,11 +12,9 @@
 
     <GridView
         android:id="@+id/gridview"
-        android:numColumns="14"
+        android:numColumns="15"
         android:background="#000000"
         android:layout_margin="1dp"
-        android:verticalSpacing="1dp"
-        android:horizontalSpacing="1dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"

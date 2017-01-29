@@ -117,6 +117,8 @@ class Square extends View {
 
     @Override
     protected void onDraw(Canvas c) {
+        c.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2, new Paint());
+        c.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight(), new Paint());
         if (stone == Stone.BLACK) {
             c.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 6, new Paint());
         } else if (stone == Stone.WHITE) {
