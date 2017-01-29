@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new GridAdapter(this));
+        GridView gridView = (GridView) findViewById(R.id.gridview);
+        gridView.setAdapter(new GridAdapter(this));
     }
 }

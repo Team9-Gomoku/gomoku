@@ -1,76 +1,132 @@
 package cs554_2017winter_gomoku.cs.pdx.edu.gomoku;
 
-import android.content.Context;
+import android.app.Activity;
+import android.database.DataSetObserver;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.view.MotionEvent;
+import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
-import android.widget.RelativeLayout;
-import android.widget.Space;
-import android.widget.TextView;
+import android.widget.GridView;
 
-/**
- * Created by harry on 1/26/17.
- */
 public class GridAdapter extends BaseAdapter {
+    private final Activity activity;
+    private int numColumns;
+    private Square[][] squares;
+    private Stone[][] stones;
+    private Stone stoneToBePlaced = Stone.BLACK;
 
-    private final Context mContext;
-
-    public GridAdapter(Context c) {
-        mContext = c;
+    public GridAdapter(Activity activity) {
+        this.activity = activity;
+        registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                // TODO this is rather wasteful
+                for (int i = 0; i < numColumns; i++) {
+                    for (int j = 0; j < numColumns; j++) {
+                        squares[i][j].setStone(stones[i][j]);
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public int getCount() {
-        return 14 * 14;
+        numColumns = ((GridView) activity.findViewById(R.id.gridview)).getNumColumns();
+        return numColumns * numColumns;
     }
 
     @Override
     public Object getItem(int position) {
-        return position;
+        return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return new Square(mContext);
+        if (squares == null) {
+            squares = new Square[numColumns][numColumns];
+        }
+        int row = getRow(position);
+        int col = getColumn(position);
+        if (squares[row][col] == null) {
+            squares[row][col] = new Square(activity, position);
+        }
+        return squares[row][col];
+    }
+
+    void placeStoneAt(int position) {
+        if (stones == null) {
+            stones = new Stone[numColumns][numColumns];
+        }
+        stones[getRow(position)][getColumn(position)] = stoneToBePlaced;
+        nextPlayer();
+        notifyDataSetChanged();
+    }
+
+    private void nextPlayer() {
+        if (stoneToBePlaced == Stone.BLACK) {
+            stoneToBePlaced = Stone.WHITE;
+        } else if (stoneToBePlaced == Stone.WHITE) {
+            stoneToBePlaced = Stone.BLACK;
+        } else {
+            throw new IllegalStateException("This cannot happen.");
+        }
+    }
+
+    private int getRow(int position) {
+        return position / numColumns;
+    }
+
+    private int getColumn(int position) {
+        return position % numColumns;
     }
 }
 
 class Square extends View {
-    public Square(Context context) {
-        super(context);
-        setBackgroundColor(Color.WHITE);
+    private Stone stone = null;
+
+    public Square(Activity activity, final int position) {
+        super(activity);
+        setBackgroundColor(Color.GRAY);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ColorDrawable cd = (ColorDrawable) getBackground();
-                if (cd.getColor() == Color.WHITE) {
-                    setBackgroundColor(Color.BLACK);
-                } else {
-                    setBackgroundColor(Color.WHITE);
+                if (stone == null) {
+                    ((GridAdapter) ((GridView) getParent()).getAdapter()).placeStoneAt(position);
                 }
             }
         });
+    }
 
-        setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO event.getX() event.getY()
-                return false;
-            }
-        });
+    void setStone(Stone s) {
+        stone = s;
+        invalidate();
     }
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
+
+    @Override
+    protected void onDraw(Canvas c) {
+        if (stone == Stone.BLACK) {
+            c.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 6, new Paint());
+        } else if (stone == Stone.WHITE) {
+            Paint p = new Paint();
+            p.setColor(Color.WHITE);
+            c.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 6, p);
+        }
+    }
+}
+
+enum Stone {
+    BLACK, WHITE;
 }
